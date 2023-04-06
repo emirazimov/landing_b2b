@@ -1,0 +1,37 @@
+# B2B website deployment
+# https://gallery.ecr.aws/nginx/nginx customizations
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: dev-website-b2b-deployment
+  namespace: dev
+  labels:
+    app: dev-website-b2b
+spec:
+  selector:
+    matchLabels:
+      app: dev-website-b2b
+  replicas: 1
+
+  template:
+    metadata:
+      labels:
+        app: dev-website-b2b
+    spec:
+      restartPolicy: Always
+      containers:
+        - name: dev-website-b2b-nginx
+          image: 264065980716.dkr.ecr.us-east-2.amazonaws.com/dev-website-b2b:v2.11.0
+          imagePullPolicy: Always
+          resources:
+            limits:
+              memory: "128Mi"
+              cpu: "100m"
+          env:
+            - name: NGINX_ENTRYPOINT_QUIET_LOGS
+              value: "1"
+          ports:
+            - name: http
+              containerPort: 80
+            - name: https
+              containerPort: 443

@@ -1,0 +1,38 @@
+{
+  "name": "b2b-new-landing",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint",
+    "export": "next build && next export",
+    "partytown": "partytown copylib public/~partytown"
+  },
+  "dependencies": {
+    "@builder.io/partytown": "^0.7.5",
+    "@types/node": "18.14.6",
+    "@types/react": "18.0.28",
+    "@types/react-dom": "18.0.11",
+    "autoprefixer": "^10.4.13",
+    "cleave.js": "^1.6.0",
+    "compression-webpack-plugin": "^10.0.0",
+    "cross-env": "^7.0.3",
+    "next": "13.2.3",
+    "next-images": "^1.8.4",
+    "postcss": "^8.4.21",
+    "react": "18.2.0",
+    "react-calendly": "^2.2.2",
+    "react-dom": "18.2.0",
+    "react-input-mask": "^2.0.4",
+    "react-phone-number-input": "^3.2.19",
+    "react-youtube": "^10.1.0",
+    "tailwindcss": "^3.2.7",
+    "typescript": "4.9.5"
+  },
+  "devDependencies": {
+    "@types/cleave.js": "^1.4.7",
+    "@types/react-input-mask": "^3.0.2"
+  }
+}

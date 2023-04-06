@@ -1,0 +1,51 @@
+version: 0.2
+phases:
+  install:
+    runtime-versions:
+      nodejs: 16
+  pre_build:
+    commands:
+      - aws --version
+      - echo Logging in to Amazon ECR...
+      - aws ecr get-login-password --region $AWS_DEFAULT_REGION | docker login --username AWS --password-stdin $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com
+
+      # Installs dependencies into the node_modules/ directory
+      - npm install --force
+  build:
+    commands:
+      # Build source code
+      - echo Build started on `date`, $(date +%Y-%m-%d.%H.%M.%S)
+      - echo Building...
+
+      - npm run export
+
+      # Build docker image
+      - docker build -f dockerfile.prod -t $IMAGE_REPO_NAME:latest .
+      - docker tag $IMAGE_REPO_NAME:latest $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$IMAGE_REPO_NAME:v2.9.0
+  post_build:
+    commands:
+      # Push Docker Image to ECR Repository
+      - echo "Build completed on `date`"
+      - echo "Pushing the Docker image to ECR Repository"
+      - docker push $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$IMAGE_REPO_NAME:v2.9.0
+      - echo "Docker Image Push to ECR Completed - $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$IMAGE_REPO_NAME:latest"
+
+      # Setup kubectl with our EKS Cluster
+      - echo "Update Kube Config"
+      - aws eks update-kubeconfig --name $EKS_CLUSTER_NAME
+
+      # Apply changes to our Application using kubectl
+      - echo "Apply changes to kube manifests"
+      # ENV: PRODUCTION
+      - kubectl apply -f deploy/k8s/prod/b2b-app.yaml
+      - kubectl apply -f deploy/k8s/prod/b2b-app.service.yaml
+
+      - echo "Completed applying changes to Kubernetes Objects"
+
+      # Create Artifacts which we can use if we want to continue our pipeline for other stages
+      - printf '[{"name":"prod-website-b2b","imageUri":"%s"}]' $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$IMAGE_REPO_NAME:$IMAGE_TAG > build.json
+artifacts:
+  files:
+    - build.json
+    - deploy/k8s/prod/b2b-app.yaml
+    - deploy/k8s/prod/b2b-app.service.yaml

@@ -1,0 +1,17 @@
+# B2B website service
+apiVersion: v1
+kind: Service
+metadata:
+  name: website-b2b-service
+  namespace: prod
+  labels:
+    app: website-b2b
+spec:
+  type: NodePort
+  selector:
+    app: website-b2b
+  ports:
+    - name: http-svc
+      protocol: TCP
+      port: 80
+      targetPort: http

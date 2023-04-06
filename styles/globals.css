@@ -1,0 +1,47 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+* {
+    font-family: 'Montserrat', 'sans-serif';
+    font-display: swap;
+}
+
+input:-webkit-autofill,
+input:-webkit-autofill:hover, 
+input:-webkit-autofill:focus, 
+input:-webkit-autofill:active{
+    -webkit-box-shadow: 0 0 0 30px #242627 inset !important;
+}
+input:-webkit-autofill{
+    -webkit-text-fill-color: white !important;
+}
+
+body {
+    background-color: black;
+    overflow-x: hidden;
+}
+
+.blue {
+    background-color: #4D4DE0;
+}
+
+.gray { 
+    background-color: #242627;
+}
+
+.black-gray {
+    background-color: #18191A;
+}
+
+.white-gray {
+    background-color: #A5A5A5;
+}
+
+::-webkit-scrollbar {
+    width: 0;
+}
+
+.text-pink {
+    color: #6F6FFF;
+}
